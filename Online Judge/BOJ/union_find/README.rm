@@ -1,0 +1,4 @@
+union-find
+
+int find()    // find root
+void merge()  // union 2 group, tree
