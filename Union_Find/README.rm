@@ -1,4 +1,4 @@
-union-find (disjoint-set)
+#union-find (disjoint-set)
 서로 다른 그룹을 합칠 수 있음
 
 path compression 필요.
