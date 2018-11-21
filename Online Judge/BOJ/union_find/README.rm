@@ -1,4 +1,8 @@
-union-find
+union-find (disjoint-set)
+서로 다른 그룹을 합칠 수 있음
 
 int find()    // find root
+- group의 각 요소에 대한 정보 추가 가능
+
 void merge()  // union 2 group, tree
+- group에 대한 정보 추가 가능
