@@ -1,12 +1,11 @@
 # Sort
-
-
-
-Sort 종류
-QuickSort
-InsertSort
-MergeSort
-HeapSort
+---  
+  
+# Sort 종류
+- QuickSort
+- InsertSort
+- MergeSort
+- HeapSort
 
 
 비교 정렬 성능의 한계를 알기 위해 **결정 트리 모델** 사용  
