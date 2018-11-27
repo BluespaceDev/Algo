@@ -1,7 +1,7 @@
 # Sort
 ---  
   
-# Sort 종류
+## Sort 종류
 - QuickSort
 - InsertSort
 - MergeSort
