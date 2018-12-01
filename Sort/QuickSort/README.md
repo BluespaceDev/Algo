@@ -18,4 +18,4 @@ When stability is not required, quick sort is the general purpose sorting algori
 
 ## Dual-pivot 3 Way
 fastest of quick sort (random case, dupl case)
-> pivot_low | <= pivot_low && >= pivot_high | < pivot_high
+: > pivot_low | <= pivot_low && >= pivot_high | < pivot_high
