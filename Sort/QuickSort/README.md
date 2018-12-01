@@ -17,4 +17,5 @@ The 3-way partitioning code shown above is written for clarity rather than optim
 When stability is not required, quick sort is the general purpose sorting algorithm of choice. Recently, a novel dual-pivot variant of 3-way partitioning has been discovered that beats the single-pivot 3-way partitioning method both in theory and in practice.
 
 ## Dual-pivot 3 Way
-fastest of quick sort
+fastest of quick sort (random case, dupl case)
+> pivot_low | <= pivot_low && >= pivot_high | < pivot_high
