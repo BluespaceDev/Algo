@@ -19,3 +19,11 @@ When stability is not required, quick sort is the general purpose sorting algori
 ## Dual-pivot 3 Way
 fastest of quick sort (random case, dupl case)  
 array shape : > pivot_low | <= pivot_low && >= pivot_high | < pivot_high
+
+```
+1     2                  3 4 5 6 7 8           9                           10  
+|     |                                        |                            |  
+low   lo                                       hi                          high  
+pivot lo밑 index는 low pivot 보다 작음           hi위 index는 high pivot보다 큼  pivot 
+i는 lo부터 hi까지
+```
