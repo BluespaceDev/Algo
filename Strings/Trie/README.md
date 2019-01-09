@@ -55,6 +55,32 @@ int main(){
 더 나은 방법으로 각 접미사에 대한 랭킹 페어(ranking pair)를 정렬하는 것.  
 n < 10000 정도 가능 (비교 정렬).  
 n < 100000 가능 (계수 정렬).  
+  
+SA = Suffix Array의 index, 해당 array에 대해 번호를 매겼다고 생각  
+"abcd$"  
+0 : abcd$  
+1 : bcd$  
+2 : cd$  
+3 : d$  
+4 : $  
+앞에 글자를 하나씩 없애면 됨.    
+  
+RA = Suffix Array의 Rank  
+  
+RA[SA[i]] => Suffix Array의 index에 대한 Rank  
+RA[SA[i]+k] => Suffix Array의 index에 k번 뒤에꺼 Rank  
+SA[i]+k => SA[i] suffix에서 앞에 k개 만큼 문자를 뺀 suffix가 된다.  
+i = 1 이고, k = 2 이면, 
+SA[1]+2 => SA[1]="bcd$" + 2 = "d$"  
+  
+k = 2,  
+"**GA** TAGACA$"  
+"**GA** CA$"  
+비교하면, 이미 "GA"는 k=1일때 정렬되었기 때문에, 뒤에 pair만 비교하면 된다.  
+그래서 SA[i]+k를 해서 뒤에 pair에 대해 rank 비교.  
+"TAGACA$" = rank 7, "CA$" = rank 5 이기 때문에,  
+두 suffix의 rank가 바뀌게 된다.  
+  
 SA[i]에 대한 랭킹 페어 (RA[SA[i]], RA[SA[i]+k])  
 k = 1,2,4...(2의 거듭제곱이고 n보다 작음)  
 
@@ -70,6 +96,17 @@ RA[SA[n-1]] == n-1 인지 검사하면 랭킹이 다 부여 되었는지 알 수
 정렬 : O(nlogn), 계수 정렬 사용하면 O(n)
 반복 : O(logn)  
 시간 복잡도 : O(n log^2 n), O(nlogn)
+
+```c++
+// Construct Suffix Array - shudo code
+for (k = 1; k < n; k <<= 1) // O(log n)
+  sort based on ranking pair // O(n)
+  for (i = 1; i < n; i++)
+    if ranking pair is different
+      increase rank
+  updating RA[] from tempRA[]
+finish
+```
 
 ```c++
 void countingSort(int k) {                                          // O(n)
