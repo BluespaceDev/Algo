@@ -39,9 +39,35 @@ c_ij
 Step에서 걸리는 시간 O(N^2), Step 1에서 O(n^5)이 되지 않기 위해 이전 step에서 matching 수정필요.  
 최대 O(N^2)번 반복 (매번 최소 1개의 "0-weight edge"를 찾기 때문)  
 Total O(N^4)  
-
+  
+  
 ## O(n^3) algorithm
+Maximum-weighted matching 문제를 다루기 때문에  
+minimum -> maximum로 변경, 가중치를 바꾸면 쉽게 가능.  
+w(x,y) = -w(x,y)  // 음수 방법  
+w(x,y) = M-w(x,y), M=max w(x,y) // 양수 방법  
+  
+### 기본 정리
+complete bipartite라 고려하면,
+graph G = (V,E), V는 X와 Y의 합집합 (교집합은 없음)  
 
-
+#### Vertex labeling  
+각 정점은 l(x)+l(y) >= w(x,y)를 만족하는 번호를 부여받음 (edge에 연결된 x,y 라벨의 합은 가중치보다 작아야함)  
+  
+#### Equality subgraph  
+spanning subgraph GI = (V,EI)  
+EI집합은 (x,y)를 연결하는 edge가 있고, l(x)+l(y)=w(x,y)인 edge.  
+  
+#### 추가 이론
+Equality subgraph GI에서 perfect matching M* 이 되면 M* 는 Graph G에서 maximum-weighted matching이 된다.
+  
+#### Alternating path and alternating tree
+matching M에서 matched vertex와 exposed(unmatched) vertex가 있다.  
+alternating path : path P에서 서로 다른 P (같이 선택할 수 없는), 어떤 경로를 선택하느냐에 따라 서로 다른 matching이 된다.  
+augmenting : alternating path에서 첫번째나 마지막 정점이 exposed 상태이면 edge를 도치시키면서 matching의 크기를 늘릴 수 있음.  
+alternating tree : exposed vertex 인 root를 가졌고, root에서 시작하는 경로가 alternating인 tree.  
+  
+  
+  
 참고 사이트  
 https://www.topcoder.com/community/competitive-programming/tutorials/assignment-problem-and-hungarian-algorithm/
