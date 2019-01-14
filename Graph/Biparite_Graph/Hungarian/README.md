@@ -50,6 +50,8 @@ w(x,y) = M-w(x,y), M=max w(x,y) // 양수 방법
 ### 기본 정리
 complete bipartite라 고려하면,
 graph G = (V,E), V는 X와 Y의 합집합 (교집합은 없음)  
+J_G(v) = {u|(v,u)} // graph G에서 정점 v와 연결된 정점들 u
+J_G(S) = U J_G(v)  // graph G에서 정점들의 부분집합 S와 연결된 모든 정점들
 
 #### Vertex labeling  
 각 정점은 l(x)+l(y) >= w(x,y)를 만족하는 번호를 부여받음 (edge에 연결된 x,y 라벨의 합은 가중치보다 작아야함)  
@@ -63,11 +65,205 @@ Equality subgraph GI에서 perfect matching M* 이 되면 M* 는 Graph G에서 m
   
 #### Alternating path and alternating tree
 matching M에서 matched vertex와 exposed(unmatched) vertex가 있다.  
-alternating path : path P에서 서로 다른 P (같이 선택할 수 없는), 어떤 경로를 선택하느냐에 따라 서로 다른 matching이 된다.  
+alternating path : 한 정점에서 시작해서 여러 경로가 나옴. path P에서 서로 다른 P (같이 선택할 수 없는), 어떤 경로를 선택하느냐에 따라 서로 다른 matching이 된다.  
 augmenting : alternating path에서 첫번째나 마지막 정점이 exposed 상태이면 edge를 도치시키면서 matching의 크기를 늘릴 수 있음.  
 alternating tree : exposed vertex 인 root를 가졌고, root에서 시작하는 경로가 alternating인 tree.  
   
+### 알고리즘 동작
+
+#### Step 0) 초기화
+vertex labaling, 
+
+```cpp
+// 라벨링 초기화
+void init_labels()
+{
+    memset(lx, 0, sizeof(lx));
+    memset(ly, 0, sizeof(ly));
+    for (int x = 0; x < n; x++)
+        for (int y = 0; y < n; y++)
+            lx[x] = max(lx[x], cost[x][y]); // 정점 x와 연결된 edge중 cost가 가장 높은 값을 labeling
+}
+```
+
+#### Step 1)
+A. matching M이 다 연결되면 종료, 그렇지 않으면  
+B. 일부 정점 x가 exposed면 S={x},T={} (x는 build를 진행할 alternating tree의 root), 그리고 Step 2로 진행  
   
+```cpp
+void augment() //main function of the algorithm
+{
+    // step1
+    if (max_match == n) return; //A. check whether matching is already perfect
+    int x, y, root; //just counters and root vertex
+    int q[N], wr = 0, rd = 0; //q - queue for bfs, wr,rd - write and read
+    //pos in queue
+    memset(S, false, sizeof(S)); //init set S
+    memset(T, false, sizeof(T)); //init set T
+    memset(prev, -1, sizeof(prev)); //init set prev - for the alternating tree
+    // B. X part로부터 exposed vertex 를 여러개 찾는다.
+    // finding root of the tree
+    for (x = 0; x < n; x++)
+        if (xy[x] == -1)
+        {
+            q[wr++] = root = x;
+            prev[x] = -2;
+            S[x] = true;
+            break;
+        }
+    //initializing slack array
+    for (y = 0; y < n; y++)
+    {
+        slack[y] = lx[root] + ly[y] - cost[root][y];
+        slackx[y] = root;
+    }
+    // end of step 1
+    ...
+}
+```
+
+  
+#### Step 2)
+A. J_Gl(S) != T (Equality subgraph Gl에서 S와 T가 연결x) 이면, Step 3로 진행.  
+B. J_Gl(S) = T (연결되어 있으면), labeling을 업데이트 한다.  
+delta = min(l(x)+l(y)-w(x,y)) // x는 S의 정점, y는 T밖의 정점, S에서 T에 있지 않은 정점y와 연결된 값중 최소값.  
+l'(v) // 존재하는 라벨들을 업데이트  
+= l(v) - delta // v가 S에 있으면  
+= l(v) + delta // v가 T에 있으면  
+= l(v) // 둘다 없을 경우  
+  
+```cpp
+// alternating tree는 build된 상태이나 augmenting path는 찾지 못했음.
+// 그래서 update labeling 필요.
+// 새로운 edge를 equality subgraph 추가 (alternating tree 확장)
+// main idea : equality graph에서 현재 label상태로 augmenting path를 찾을 때까지 update label 반복
+// 그냥하면 O(n^4)인데 step 1에서 slack초기화해서 O(n)만 걸림
+// slack update - delta찾을때 O(n^2)을 O(n)으로 하게 해줌
+// step 3) vertex x를 S에 옮김 O(n)
+// step 2) updating labeling 할때 O(n)
+void update_labels()
+{
+    int x, y, delta = INF; //init delta as infinity
+    for (y = 0; y < n; y++) //calculate delta using slack
+        if (!T[y])
+            delta = min(delta, slack[y]);
+    for (x = 0; x < n; x++) //update X labels
+        if (S[x]) lx[x] -= delta;
+    for (y = 0; y < n; y++) //update Y labels
+        if (T[y]) ly[y] += delta;
+    for (y = 0; y < n; y++) //update slack array
+        if (!T[y])
+            slack[y] -= delta;
+}
+```
+  
+  
+#### Step 3)
+A. 일부 정점 y (T에 속해 있고 Equality subgraph Gl에서 S와 연결되어 있지 않음) 를 찾는다.
+B. y가 exposed이고, x(root of the tree)에서 y로 alternating path가 존재하면, 이 경로를 따라서 augment matching한다. 그 후 Step 1으로 진행  
+C. y가 M에서 일부 정점 z와 연결되어 있으면 (z,y)를 alternating tree에 추가한다. (S+={z}, T+={y}), 그 후 Step 2로 진행.  
+  
+각 edge는 1번만 사용된다.  
+
+```cpp
+//x - current vertex,prevx - vertex from X before x in the alternating path,
+//so we add edges (prevx, xy[x]), (xy[x], x)
+void add_to_tree(int x, int prevx)
+{
+    S[x] = true; //add x to S
+    prev[x] = prevx; //we need this when augmenting
+    for (int y = 0; y < n; y++) //update slacks, because we add new vertex to S
+        if (lx[x] + ly[y] - cost[x][y] < slack[y])
+        {
+            slack[y] = lx[x] + ly[y] - cost[x][y];
+            slackx[y] = x;
+        }
+}
+void augment() //main function of the algorithm
+{
+...
+    while (true) //main cycle
+    {
+        // A. 몇몇 exposed vertex에서 시작하여 alternating tree를 build 함.
+        while (rd < wr) //building tree with bfs cycle
+        {
+            x = q[rd++]; //current vertex from X part
+            for (y = 0; y < n; y++) //iterate through all edges in equality graph
+                if (cost[x][y] == lx[x] + ly[y] && !T[y])
+                {
+                    if (yx[y] == -1) break; //an exposed vertex in Y found, so
+                    //augmenting path exists!
+                    T[y] = true; //else just add y to T,
+                    q[wr++] = yx[y]; //add vertex yx[y], which is matched
+                    //with y, to the queue
+                    add_to_tree(yx[y], x); //add edges (x,y) and (y,yx[y]) to the tree
+                }
+            if (y < n) break; //augmenting path found!
+        }
+        if (y < n) break; //augmenting path found!
+        
+        update_labels(); //augmenting path not found, so improve labeling
+        wr = rd = 0;
+        for (y = 0; y < n; y++)
+            //in this cycle we add edges that were added to the equality graph as a
+            //result of improving the labeling, we add edge (slackx[y], y) to the tree if
+            //and only if !T[y] && slack[y] == 0, also with this edge we add another one
+            //(y, yx[y]) or augment the matching, if y was exposed
+            if (!T[y] && slack[y] == 0)
+            {
+                if (yx[y] == -1) //exposed vertex in Y found - augmenting path exists!
+                {
+                    x = slackx[y];
+                    break;
+                }
+                else
+                {
+                    T[y] = true; //else just add y to T,
+                    if (!S[yx[y]])
+                    {
+                        q[wr++] = yx[y]; //add vertex yx[y], which is matched with
+                        //y, to the queue
+                        add_to_tree(yx[y], slackx[y]); //and add edges (x,y) and (y,
+                        //yx[y]) to the tree
+                    }
+                }
+            }
+        if (y < n) break; //augmenting path found!
+    } // end of while
+    
+    if (y < n) //we found augmenting path!
+    {
+        max_match++; //increment matching
+        //in this cycle we inverse edges along augmenting path
+        for (int cx = x, cy = y, ty; cx != -2; cx = prev[cx], cy = ty)
+        {
+            ty = xy[cx];
+            yx[cy] = cx;
+            xy[cx] = cy;
+        }
+        augment(); //recall function, go to step 1 of the algorithm
+    }
+}
+```
+
+### Code
+```cpp
+int hungarian()
+{
+    int ret = 0; //weight of the optimal matching
+    max_match = 0; //number of vertices in current matching
+    memset(xy, -1, sizeof(xy));
+    memset(yx, -1, sizeof(yx));
+    init_labels(); //step 0
+    augment(); //steps 1-3
+    for (int x = 0; x < n; x++) //forming answer there
+        ret += cost[x][xy[x]];
+    return ret;
+}
+
+```
+
+
   
 참고 사이트  
 https://www.topcoder.com/community/competitive-programming/tutorials/assignment-problem-and-hungarian-algorithm/
