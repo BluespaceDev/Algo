@@ -90,6 +90,8 @@ void init_labels()
 A. matching M이 다 연결되면 종료, 그렇지 않으면  
 B. 일부 정점 x가 exposed면 S={x},T={} (x는 build를 진행할 alternating tree의 root), 그리고 Step 2로 진행  
   
+alternating tree시작 root, tree를 찾고 path를 설정.  
+  
 ```cpp
 void augment() //main function of the algorithm
 {
@@ -159,7 +161,7 @@ void update_labels()
   
   
 #### Step 3)
-A. 일부 정점 y (T에 속해 있고 Equality subgraph Gl에서 S와 연결되어 있지 않음) 를 찾는다.
+A. 일부 정점 y (T에 속해 있고 Equality subgraph Gl에서 S와 연결되어 있지 않음) 를 찾는다.  
 B. y가 exposed이고, x(root of the tree)에서 y로 alternating path가 존재하면, 이 경로를 따라서 augment matching한다. 그 후 Step 1으로 진행  
 C. y가 M에서 일부 정점 z와 연결되어 있으면 (z,y)를 alternating tree에 추가한다. (S+={z}, T+={y}), 그 후 Step 2로 진행.  
   
