@@ -75,6 +75,19 @@ alternating tree : exposed vertex 인 root를 가졌고, root에서 시작하는
 vertex labaling, 
 
 ```cpp
+#define N 55 //max number of vertices in one part
+#define INF 100000000 //just infinity
+int cost[N][N]; //cost matrix
+int n, max_match; //n workers and n jobs
+int lx[N], ly[N]; //labels of X and Y parts
+int xy[N]; //xy[x] - vertex that is matched with x,
+int yx[N]; //yx[y] - vertex that is matched with y
+bool S[N], T[N]; //sets S and T in algorithm
+int slack[N]; //as in the algorithm description
+int slackx[N]; //slackx[y] such a vertex, that
+// l(slackx[y]) + l(y) - w(slackx[y],y) = slack[y]
+int prev[N]; //array for memorizing alternating paths
+
 // 라벨링 초기화
 void init_labels()
 {
