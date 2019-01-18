@@ -50,8 +50,9 @@ w(x,y) = M-w(x,y), M=max w(x,y) // 양수 방법
 ### 기본 정리
 complete bipartite라 고려하면,
 graph G = (V,E), V는 X와 Y의 합집합 (교집합은 없음)  
-J_G(v) = {u|(v,u)} // graph G에서 정점 v와 연결된 정점들 u
-J_G(S) = U J_G(v)  // graph G에서 정점들의 부분집합 S와 연결된 모든 정점들
+J_G(v) = {u|(v,u)} // graph G에서 정점 v와 연결된 정점들 u  
+J_G(S) = U J_G(v)  // graph G에서 정점들의 부분집합 S와 연결된 모든 정점들  
+slack : Y와 연결된 간선 중 x(S집합안에 있는)와 1:1매칭되는 EI가 최소인 간선들, 
 
 #### Vertex labeling  
 각 정점은 l(x)+l(y) >= w(x,y)를 만족하는 번호를 부여받음 (edge에 연결된 x,y 라벨의 합은 가중치보다 작아야함)  
@@ -72,7 +73,7 @@ alternating tree : exposed vertex 인 root를 가졌고, root에서 시작하는
 ### 알고리즘 동작
 
 #### Step 0) 초기화
-vertex labaling, 
+vertex labaling,  
 
 ```cpp
 #define N 55 //max number of vertices in one part
