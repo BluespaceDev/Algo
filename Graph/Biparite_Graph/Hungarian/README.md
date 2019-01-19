@@ -84,7 +84,7 @@ int lx[N], ly[N]; //labels of X and Y parts
 int xy[N]; //xy[x] - vertex that is matched with x,
 int yx[N]; //yx[y] - vertex that is matched with y
 bool S[N], T[N]; //sets S and T in algorithm
-int slack[N]; //as in the algorithm description
+int slack[N]; //as in the algorithm description, J_g(S)에서 y에 연결된 최소 간선(lx+ly-cost)
 int slackx[N]; //slackx[y] such a vertex, that
 // l(slackx[y]) + l(y) - w(slackx[y],y) = slack[y]
 int prev[N]; //array for memorizing alternating paths
