@@ -167,6 +167,7 @@ void update_labels()
         if (S[x]) lx[x] -= delta;
     for (y = 0; y < n; y++) //update Y labels
         if (T[y]) ly[y] += delta;
+    // S에 있는 라벨x를 -delta했으니, slack(lx+ly-cost)\T 인 부분도 -delta해야 같은 값 유지
     for (y = 0; y < n; y++) //update slack array
         if (!T[y])
             slack[y] -= delta;
