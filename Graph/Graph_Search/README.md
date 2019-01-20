@@ -41,4 +41,4 @@ queue를 이용하여 간단히 구현 가능.
 DFS 1번이면 모든 절단점과 다리를 구할 수 있다. O(V+E)  
 dfs_num(몇번째 방문인지), dfs_low(도달 가능한 최소의 dfs_num값) 값을 유지해 나감.  
 dfs_low(v) >= dfs_num(u) 이면, 정점 u는 절단점이다. dfs_low(v)가 dfs_num(u)보다 작지 않다는 것으로 유추.  
-u->v->u 일때, 
+u->v->u 일때, AAAAAA
