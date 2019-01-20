@@ -41,4 +41,65 @@ queue를 이용하여 간단히 구현 가능.
 DFS 1번이면 모든 절단점과 다리를 구할 수 있다. O(V+E)  
 dfs_num(몇번째 방문인지), dfs_low(도달 가능한 최소의 dfs_num값) 값을 유지해 나감.  
 dfs_low(v) >= dfs_num(u) 이면, 정점 u는 절단점이다. dfs_low(v)가 dfs_num(u)보다 작지 않다는 것으로 유추.  
-u->v->u 일때, AAAAAA
+u->v->w 일때, 정점w로 도달할 수 있는 역방향 간선이 존재하지 않는 다는 뜻. 역방향 간선이 존재하지 않으면 해당 정점을 끊으면 그래프도 끊김.  
+(단, 루트가 절단점이 되려면 자식 2개 이상 가지고 있어야 함.)  
+절단 다리는 dfs_low(v) > dfs_num(u) 로 = 부호만 빠지면 된다. (=부호는 양방향일때 의미).  
+
+```c++
+void articulationPointAndBridge(int u){
+    dfs_low[u] = dfs_num[u] = dfsNumberCounter++; // 처음에는 두개의 값이 동일하게 세팅됨.
+    for (int j = 0; j < AdjList[u].size(); ++j){
+        int v = AdjList[u][j];
+        if (dfs_num[v] == UNVISITED) { // 트리 간선
+            dfs_parent[v] = u;
+            if (u == dfsRoot) rootChildren++;
+            
+            articulationPointAndBridge(v);
+            
+            if (dfs_low[v] >= dfs_num[u]) // 절단점
+                articulation_vertex[u] = true;
+            if (dfs_low[v] > dfs_num[u])  // 절단 다리
+                printf("edge(%d-%d) is bridge", u, v);
+            
+            dfs_low[u] = min(dfs_low[u], dfs_low[v]); // dfs_low[u] 갱신
+        }
+        else if (v != dfs_parent[u]) // 역방향 간선이며, 양방향이 아니라면, (u(parent[u])->v(u)->u(v))
+            dfs_low[u] = min(dfs_low[u], dfs_num[v]);
+    }
+}
+```
+
+## 강결합 컴포넌트 구하기 (방향 그래프)
+SCC(Strongly Connected Component) : 하나의 연결된 컴포넌트, 어느 두 정점을 선택하더라도 경로가 있고 반대의 경로도 있다.  
+SCC를 그룹으로 표현하면 DAG를 이룸.  
+코사라주 알고리즘, 타잔 알고리즘이 있다.  
+
+### 타잔 알고리즘
+SCC가 DFS 스패닝 트리에서 서브트리를 이룬다는 기본적인 아이디어.  
+절단점과 다르게 visited 인 정점에서만 dfs_low(u)를 갱신한다.  
+스패닝 트리에서 dfs_low(u) == dfs_num(u) 이면, u가 하나의 SCC 시작정점이 된다.  
+
+```c++
+vi dfs_num, dfs_low, visited;
+    
+void tarjanSCC(int u){
+    dfs_low[u] = dfs_num[u] = dfsNumberCount++;
+    S.push_back(u) // u를 방문 순서에 따라 배열에 저장.  
+    visited[u] = 1;
+    for (int j = 0; j < AdjList[u].size(); ++j){
+        int v = AdjList[u][j];
+        if (dfs_num[v] == UNVISITED)
+            tarjanSCC(v);
+        if (visited[v])
+            dfs_low[u] = min(dfs_low[u], dfs_low[v]);
+    }
+    
+    if (dfs_low[u] == dfs_num[u]){ // SCC 루트를 구했으니 하나씩 꺼냄
+        while(1){
+            int v = S.back(); S.pop_back();
+            visited[v] = 0;
+            if (u == v) break;
+        }
+    }
+}
+```
