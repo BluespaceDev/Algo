@@ -1,0 +1,78 @@
+// 사이클을 한 덩어리로 포함하여 트리 구성
+// 도달할 수 있는 것들은 다 묶음, 다른 그룹 방문할때는 하나의 그룹으로 포함x
+
+#include <cstdio>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX_N   50000 +1
+
+#define UNVISITED   0
+#define EXPLORED    1
+#define VISITED     2
+
+vector<int> adj[MAX_N];
+int cover[MAX_N];       // 몇명에게 forwarding하는지 갯수
+int visit[MAX_N];
+int dfs_low[MAX_N];
+int dfs_num[MAX_N];
+int dfs_counter;
+int counterToV[MAX_N];
+
+int T;
+int N;
+
+void dfs(int u){
+    visit[u] = EXPLORED;
+    dfs_low[u] = dfs_num[u] = dfs_counter++;
+    cover[u] = 1;
+    counterToV[dfs_low[u]] = u;
+    for(int i = 0; i < adj[u].size(); ++i){
+        int v = adj[u][i];
+        if(visit[v] == UNVISITED)
+            dfs(v);
+        else if(visit[v] == VISITED && dfs_low[v] != dfs_num[u]){
+            // found cycle group, not update dfs_low(another group)
+            cover[u] += cover[counterToV[dfs_low[v]]];
+            continue;
+        }
+        cover[u] += cover[v];
+        dfs_low[u] = min(dfs_low[u], dfs_low[v]);
+    }
+    visit[u] = VISITED;
+}
+
+int main(){
+    scanf("%d\n", &T);
+    for(int t = 1; t <= T; ++t){
+        scanf("%d\n", &N);
+        int a,b;
+        for(int i = 0; i < N; ++i){
+            scanf("%d %d\n", &a, &b);
+            adj[a].push_back(b);
+        }
+        
+        dfs_counter = 1;
+        for(int i = 1; i <= N; ++i)
+            if(visit[i] == UNVISITED)
+                dfs(i);
+        
+        int max_cover = 0;
+        int ans = 0;
+        for(int i = 1; i <= N; ++i)
+            if(max_cover < cover[i]){
+                max_cover = cover[i];
+                ans = i;
+            }
+        
+        printf("Case %d: %d\n", t, ans);
+        
+        memset(visit, UNVISITED, sizeof(visit));
+        for(int i = 1; i <= N; ++i)
+            adj[i].clear();
+    }
+    return 0;
+}
