@@ -70,12 +70,41 @@ while(!q.empty()){
         int v = adj[u][i];
         in_edge[v]--;   // 정점 u에 모든 진출 간선을 제거
         if (in_edge[v] == 0) // 제거 하면서 u에 연결된 정점 v가 진입 차수가 0이 되면,
-          q.enqueue(v);
+            q.enqueue(v);
     }
 }
 ```
 
 Q. 위 알고리즘들은 위상정렬 1개만 구함. 만약 가능한 모든 위상정렬을 구하려면?  
+
+## 이분 그래프 검사
+DFS, BFS 모두 사용할 수 있으나 BFS가 더 자연스러울 것.  
+정점 0으로 색칠하고 다음 정점 1로 색칠 하면서 두 가지 색깔로 색칠하면서 검사.  
+
+```c++
+queue<int> q;
+q.push(s);    // 시작 정점 s
+int color[V];
+color[s] = 0;
+bool isBipartite = true;
+while(!q.empty() & isBipartite){
+    int u = q.front(); q.pop();
+    for (int i = 0; i < adj[u].size(); ++i){
+        int v = adj[u][i];
+        if (color[v] == INF){  // v가 색칠 안되었으면,
+            color[v] = 1 - color[u];  // {0, 1} 중 하나 색칠
+            q.push(v);
+        }
+        else if (color[v] == color[u]){ // v가 색칠되어 있는데 u랑 같은 색이면, 충돌
+            isBipartite = false;
+            break;
+        }
+    }
+}
+```
+
+Q. 정점 v개인 단순 그래프가 이분 그래프라면 최대 간선의 개수는?
+A. S, T 정점 그룹으로 나눠지니, S-T 연결되는 최대 간선 SxT개  
 
 ## 절단점 및 다리 구하기(무방향 그래프)
 절단점 : 그래프의 정점 중에 정점을 제거 했을 때(간선도 포함하여 제거됨) 그래프가 연결되지 않도록 많드는 정점.  
