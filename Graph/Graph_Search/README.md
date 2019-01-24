@@ -14,6 +14,7 @@ backtracking과 다른 점은 퇴각할때 정점의 표시를 이전 상태로 
 ```c++
 void graphCheck(int u){
     dfs_num[u] = EXPLORED;
+    time_d[u] = time++;   // 시간 기록
     for (int j = 0; j < AdjList[u].size(); ++j){
         int v = AdjList[u][j];
         if (dfs_num[v] == UNVISITED){ // 트리 간선, EXPLORED->UNVISITED
@@ -30,11 +31,53 @@ void graphCheck(int u){
             // forward/cross edge
     }
     dfs_num[u] = VISITED;
+    time_f[u] = time++;
 }
 ```
 
+각 정점에 시간을 기록하여 그래프 구조에 관한 중요한 정보 제공.  
+  
+괄호 정리.  
+흰색 경로 정리 - u가 발견 될 때, u->v 까지 모든 경로상 정점들은 흰색 정점으로 구성된다.   
+
 ## BFS
 queue를 이용하여 간단히 구현 가능.  
+진행 정도에 따라 coloring을 함.  
+흰색(방문x)->회색(방문예정,q에 있는 상태)->검은색(방문끝)  
+회색은 발견된 정점과 발견하지 않은 정점의 경계선을 나타낸다.  
+수행시간은 인접리스트 O(V+E), 인접행렬 O(V^2)  
+```c++
+for 각 정점 u {
+    u.color = WHITE
+    u.d = INF       // s부터 u까지 거리
+    u.p = NULL      // u 정점의 직전원소(부모)
+}
+s.color = GRAY
+s.d = 0
+s.p = NULL
+enqueue(s)
+while(!q.empty()){
+    u = dequeue();
+    for u와 연결된 정점 v {
+        if (v.color == WHITE){
+            v.color = GRAY
+            v.d = u.d + 1   // edge 가중치 1, 진행하는 layer라고도 볼 수 있음
+            v.p = u
+            enqueue(v)
+        }
+    }
+    u.color = BLACK
+}
+```
+
+u.d : (s,u) 까지 최단 경로가 저장된다.  
+보조정리 - (s,v) <= (s,u)+1  
+s에서 u로 도달가능하면 s에서 v도 도달 가능하다.  
+보조정리 - BFS가 끝났을 때 각 정점에 계산된 v.d는 v.d >= (s,v)를 만족한다.  
+
+
+### BFS를 이용한 최단경로
+
 
 ## 위상정렬
 DAG(Directed Acyclic Graph) = 사이클이 없는 방향 그래프.  
@@ -56,6 +99,8 @@ void dfs(int u){
     ts.push_back(u); // 기존 dfs에서 이 부분만 추가하면 됨. 방문이 끝나면서 하나씩 담음
 }
 ```
+
+정리 - 방향 그래프가 비순환이면, dfs는 역행 간선을 만들지 않고 그 역도 성립한다.  
 
 ### 칸 알고리즘 (위상정렬)
 BFS를 응용함.  
@@ -173,3 +218,18 @@ void tarjanSCC(int u){
     }
 }
 ```
+
+### 코사라주 알고리즘
+그래프 G와 전치 그래프 G'를 이용한다.  
+전치 그래프 G'는 그래프 G의 간선을 거꾸로 된 방향으로 바꾼 것이다. (u->v) => (v->u)  
+G와 G'는 서로 같은 SCC를 가진다. (SCC정의 대로 서로 도달하는 부분은 방향을 바꿔도 서로 도달하기 때문)  
+
+```c++
+1. 각 정점 u에 대해 종료 시간 u.f를 계산 (dfs(G) 호출)
+2. 전치 그래프 G'를 생성
+3. DFS(G')를 호출한다. 호출할 때, u.f가 감소하는 순서(늦게 끝난 정점부터)로 호출한다.
+4. 3에서 깊이 우선 포레스트를 만드는데(SCC가 DAG를 이루는 데 역순으로 호출하면 각 SCC하나씩 생성됨) 그것을 출력한다.
+```
+
+### 정리들
+정리1. SCC는 DAG를 이룬다.  
