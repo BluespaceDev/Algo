@@ -158,7 +158,8 @@ dfs_num(몇번째 방문인지), dfs_low(도달 가능한 최소의 dfs_num값) 
 dfs_low(v) >= dfs_num(u) 이면, 정점 u는 절단점이다. dfs_low(v)가 dfs_num(u)보다 작지 않다는 것으로 유추.  
 u->v->w 일때, 정점w로 도달할 수 있는 역방향 간선이 존재하지 않는 다는 뜻. 역방향 간선이 존재하지 않으면 해당 정점을 끊으면 그래프도 끊김.  
 (단, 루트가 절단점이 되려면 자식 2개 이상 가지고 있어야 함.)  
-절단 다리는 dfs_low(v) > dfs_num(u) 로 = 부호만 빠지면 된다. (=부호는 양방향일때 의미).  
+절단 다리는 dfs_low(v) > dfs_num(u) 로 "=" 부호만 빠지면 된다. (=부호는 양방향일때 의미).  
+절단점에서 dfs_low(v) == dfs_num(u) 인 경우는 back edge의 도착점일 경우 그 점(dfs_low인 점)은 절단점이 될 수 있다.  
 
 ```c++
 void articulationPointAndBridge(int u){
