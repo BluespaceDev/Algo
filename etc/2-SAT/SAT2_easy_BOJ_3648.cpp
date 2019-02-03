@@ -1,4 +1,5 @@
 // 1번째 사람이 true인 조건 ~1 -> 1 추가 => (~1,x)라면 x가 true여야 ~1을 1로 변경가능
+// (a ∨ a)  는 절을 하나 추가하는 
 
 #include <cstdio>
 #include <vector>
