@@ -52,7 +52,7 @@ int main(){
                 scc(i);
         
         bool vaild = true;
-        for(int i = 1; i < n; ++i)
+        for(int i = 1; i <= n; ++i)
             if(dfs_low[i] == dfs_low[i+n]){
                 vaild = false;
                 break;
