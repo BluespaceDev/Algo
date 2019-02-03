@@ -1,6 +1,6 @@
 // 보석 : y 지나면 x는 지나면 안됨, 반대도 성립, 한번 지난 곳은 지날 수 없음
 // 위치 : y 지나면 x는 꼭 지나가야됨, y를 안지나면 x도 지나면 안됨
-// #define SIZE MAX_N+MAX_M 이 안먹힘
+// #define SIZE MAX_N+MAX_M 이 안먹힘 => 괄호를 안쳐서 *2연산이 먼저되서 런타임 에러 발생했음...
 
 #include <cstdio>
 #include <vector>
