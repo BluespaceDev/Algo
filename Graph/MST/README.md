@@ -17,6 +17,12 @@ spanning tree : spen(덮다)라는 말 처럼, 모든 정점을 포함하는 트
   
 `신장트리 A에 경량간선(u,v)을 추가하면 (u,v)는 A에 대해 안전하다.` => 프림 기초  
 `서로 다른 신장트리 A,B 에 대해 A와 B를 잇는 (u,v)가 경량간선이면 안전하다.` => 크루스칼 기초  
+<details>
+<summary>증명보기</summary>
+<div markdown="1">
+<img src="https://user-images.githubusercontent.com/6275158/52279577-31958e80-299d-11e9-911d-a74d5fe290d5.png">
+</div>
+</details>
 
 ## 크루스칼 알고리즘
 E개 간선을 가중치가 감소하지 않는 순서로 정렬.  
