@@ -9,8 +9,14 @@ backtracking과 다른 점은 퇴각할때 정점의 표시를 이전 상태로 
 ### 그래프 간선의 속성
 트리 간선 : DFS가 탐색하는 간선. 현재 상태가 EXPLORED -> UNVISITED 로 향하는 간선  
 역방향 간선 : 사이클에 해당하는 간선. 현재 상태가 EXPLORED -> EXPLORED 로 향하는 간선. (양방향 간선은 사이클로 취급하지 않음). 
-순방향 간선, 교차 간선 : EXPLORED -> VISITED
-
+순방향 간선, 교차 간선 : EXPLORED -> VISITED  
+<details>
+<summary>간선그림</summary>
+<div markdown="1">
+<img src="https://user-images.githubusercontent.com/6275158/52280014-3444b380-299e-11e9-9fb2-948dbe8cb0e1.png">
+</div>
+</details>  
+  
 ```c++
 void graphCheck(int u){
     dfs_num[u] = EXPLORED;
@@ -75,9 +81,17 @@ while(!q.empty()){
 ```
 
 u.d : (s,u) 까지 최단 경로가 저장된다.  
-보조정리 - (s,v) <= (s,u)+1  
+`(s,v) <= (s,u)+1`  
 s에서 u로 도달가능하면 s에서 v도 도달 가능하다.  
-보조정리 - BFS가 끝났을 때 각 정점에 계산된 v.d는 v.d >= (s,v)를 만족한다.  
+`BFS가 끝났을 때 각 정점에 계산된 v.d는 v.d >= (s,v)를 만족한다.`  
+
+<details>
+<summary>BFS에서 Q안에 정점은 최대 Layer 1개 차이</summary>
+<div markdown="1">
+<img src="https://user-images.githubusercontent.com/6275158/52280102-60f8cb00-299e-11e9-8f2a-c6c2221f943b.png">
+</div>
+</details>  
+  
 
 ### 트리의 지름
 임의의 정점 하나를 선택해서 가장 먼 점 v를 찾고,  
