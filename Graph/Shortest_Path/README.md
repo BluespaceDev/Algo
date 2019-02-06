@@ -56,13 +56,13 @@ if v.d > u.d + w(u,v) // 검사
 ```c++
 // 각 정점에 대해 V-1번 반복하여 완화과정 거침
 for i = 1 ~ V-1
-	for 각 간선
-		relax(u,v,w)
+    for 각 간선
+        relax(u,v,w)
 
 // 한번 더 검사, 각 간선이 최단거리가 되었는데 또 갱신이 되면 음의 순환이 있다는 것
 for 각 간선
-	if v.d > u.d + w(u,v)
-		return false;
+    if v.d > u.d + w(u,v)
+        return false;
 return true;
 ```
 O(VE) 
