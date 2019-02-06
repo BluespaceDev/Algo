@@ -40,7 +40,7 @@ if v.d > u.d + w(u,v) // 검사
 - 경로 완화 특성  
 `최단 경로 p에 각 간신들은 순서대로 하면 마지막 정점도 최단경로가 된다. (P 간선 순서 상관없이도 가능)`  
 - 직전원소 부분 그래프 특성  
-`v.d가 최단 경로가 되면 s를 루트로 갖는 최단 경로 트리 구성  
+`v.d가 최단 경로가 되면 s를 루트로 갖는 최단 경로 트리 구성`  
 
 <details>
 <summary>증명보기</summary>
@@ -114,3 +114,19 @@ Sparse 그래프( 밀도 낮은)라면 이진 최소 힙 O(V^2/lgV)
 SPFA는 경로 완화가 될 경우에만 큐에 간선을 추가하는 방식  
 평소 다익스트라 보다 더 빠르게 동작함  
 
+```c++
+// 출발점이 아닌 정점들 초기화
+for each vertex v != s in V(G)
+    d(v) = INF
+d(s) = 0
+q.push(s)
+while(!q.empty()){
+    u = q.pop();
+    for each edge(u,v) in E(G)
+        if d(u)+w(u,v) < d(v)
+	    d(v) = d(u)+w(u,v)
+	    if v is not in Q
+	        q.push(v)
+}
+```
+SPFA의 평균적인 시간복잡도는 O(E)이지만, 최악에는 O(VE)이다.
