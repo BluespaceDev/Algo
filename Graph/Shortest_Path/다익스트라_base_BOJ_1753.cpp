@@ -1,5 +1,5 @@
 //SPFA - 최악의 경우 O(VE) 라 시간초과
-//다익스트라
+//다익스트라 - q에 최대 O(E)만큼 들어감
 
 #include <cstdio>
 #include <vector>
