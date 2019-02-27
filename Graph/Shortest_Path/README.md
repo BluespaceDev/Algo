@@ -222,7 +222,7 @@ void reconstruct(int u, int v, vector<int>& path){
 i->j 경로가 도달 가능한지 여부 판단.  
 
 min(adj[i][j], adj[i][k]+adj[k][j])의 식에서  
-min => OR연산(둘 중에 하나면 연결되면 됨)  
-+ => AND연산(i->k, k->j 는 둘다 연결되야 됨)  
+'min' => OR연산(둘 중에 하나면 연결되면 됨)  
+'+' => AND연산(i->k, k->j 는 둘다 연결되야 됨)  
 으로 치환  
 
