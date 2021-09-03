@@ -58,3 +58,30 @@ public:
         return generate(nums);
     }
 };
+
+class Solution {
+public:
+    vector<TreeNode*> generateTrees(int s, int e) {
+        if (s > e)
+            return {nullptr};
+        
+        vector<TreeNode*> ans;
+        for (int i = s; i <= e; ++i) {
+            auto left = generateTrees(s, i-1);
+            auto right = generateTrees(i+1, e);
+            
+            for (auto lnode : left) {
+                for (auto rnode : right) {
+                    auto node = new TreeNode(i);
+                    node->left = lnode;
+                    node->right = rnode;
+                    ans.push_back(node);
+                }
+            }
+        }
+        return ans;
+    }
+    vector<TreeNode*> generateTrees(int n) {
+        return generateTrees(1, n);
+    }
+};
